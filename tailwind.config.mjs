@@ -8,8 +8,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        mavi: "#4335A7",
+        turkuaz: "#80C4E9",
+        beyaz: "#FFF6E9",
+        turuncu: "#FF7F3E",
       },
     },
   },
