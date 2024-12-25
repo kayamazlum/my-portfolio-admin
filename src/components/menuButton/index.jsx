@@ -8,7 +8,7 @@ const MenuButton = (props) => {
   return (
     <div
       onClick={() => router.push(`/${link}`)}
-      className="w-full py-4 px-2 border-b-2 hover:bg-turuncu bg-mavi text-beyaz transition duration-500 cursor-pointer font-medium"
+      className="w-full py-4 px-2 hover:bg-turuncu bg-mavi text-beyaz transition duration-500 cursor-pointer font-medium"
     >
       {text}
     </div>
