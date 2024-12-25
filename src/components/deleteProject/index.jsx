@@ -3,7 +3,10 @@ import BigDropdown from "../bigDropdown";
 
 const DeleteProject = (props) => {
   return (
-    <BigDropdown setFuncHandler={props.setFuncHandler}>
+    <BigDropdown
+      setFuncHandler={props.setFuncHandler}
+      funcHandler={props.funcHandler}
+    >
       <div>DELETE</div>
     </BigDropdown>
   );

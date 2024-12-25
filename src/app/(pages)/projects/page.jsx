@@ -25,7 +25,7 @@ const Projects = () => {
             Refresh
           </span>
           <span
-            onClick={() => setFuncHandler("add")}
+            onClick={() => setFuncHandler("Add Project")}
             className="bg-green-700 select-none text-white border cursor-pointer rounded-lg py-1 px-2 flex items-center gap-1 group"
           >
             <GoPlusCircle
@@ -47,29 +47,26 @@ const Projects = () => {
               </tr>
             </thead>
             <tbody className="">
-              <tr
-                onClick={() => setFuncHandler("view")}
-                className="hover:bg-turkuaz transition duration-500 cursor-pointer odd:bg-gray-200 even:bg-white "
-              >
+              <tr className="hover:bg-turkuaz transition duration-500 cursor-pointer odd:bg-gray-200 even:bg-white ">
                 <td className=" text-start p-2 border ">Başlık1</td>
                 <td className=" text-start p-2 lg:table-cell hidden border ">
                   Tarih falan
                 </td>
                 <td className=" text-start p-2 gap-1 flex text-beyaz border ">
                   <span
-                    onClick={() => setFuncHandler("view")}
+                    onClick={() => setFuncHandler("View Project")}
                     className="bg-blue-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
                   >
                     View
                   </span>
                   <span
-                    onClick={() => setFuncHandler("update")}
+                    onClick={() => setFuncHandler("Update Project")}
                     className="bg-green-600 hover:scale-110 transition-all duration-500 hover:-rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
                   >
                     Update
                   </span>
                   <span
-                    onClick={() => setFuncHandler("delete")}
+                    onClick={() => setFuncHandler("Delete Project")}
                     className="bg-red-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
                   >
                     Delete
@@ -80,23 +77,32 @@ const Projects = () => {
           </table>
         </div>
       </div>
-      {funcHandler === "add" ? (
-        <AddProject setFuncHandler={setFuncHandler} />
+      {funcHandler === "Add Project" ? (
+        <AddProject setFuncHandler={setFuncHandler} funcHandler={funcHandler} />
       ) : (
         <div></div>
       )}
-      {funcHandler === "view" ? (
-        <ViewProject setFuncHandler={setFuncHandler} />
+      {funcHandler === "View Project" ? (
+        <ViewProject
+          setFuncHandler={setFuncHandler}
+          funcHandler={funcHandler}
+        />
       ) : (
         <div></div>
       )}
-      {funcHandler === "update" ? (
-        <UpdateProject setFuncHandler={setFuncHandler} />
+      {funcHandler === "Update Project" ? (
+        <UpdateProject
+          setFuncHandler={setFuncHandler}
+          funcHandler={funcHandler}
+        />
       ) : (
         <div></div>
       )}
-      {funcHandler === "delete" ? (
-        <DeleteProject setFuncHandler={setFuncHandler} />
+      {funcHandler === "Delete Project" ? (
+        <DeleteProject
+          setFuncHandler={setFuncHandler}
+          funcHandler={funcHandler}
+        />
       ) : (
         <div></div>
       )}
