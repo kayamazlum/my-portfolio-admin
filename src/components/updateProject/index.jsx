@@ -7,32 +7,97 @@ const UpdateProject = (props) => {
       setFuncHandler={props.setFuncHandler}
       funcHandler={props.funcHandler}
     >
-      <div className="gap-2 flex flex-col">
-        <div>
-          <label className="text-xl font-medium">Title</label>
-          <input type="text" name="title" id="title" />
+      <form onSubmit={() => null} className="gap-4 flex flex-col">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="title" className="text-xl font-medium rounded-md">
+            Project Name
+          </label>
+          <input
+            id="title"
+            className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md"
+            type="text"
+            name="title"
+            placeholder="Enter your project name"
+            required
+          />
         </div>
-        <div>
-          <label className="text-xl font-medium">Summary</label>
-          <input type="text" name="summary" id="summary" />
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="summary" className="text-xl font-medium rounded-md">
+            Summary
+          </label>
+          <input
+            id="summary"
+            className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md"
+            type="text"
+            name="summary"
+            placeholder="Enter a short summary"
+            required
+          />
         </div>
-        <div>
-          <label className="text-xl font-medium">Content</label>
-          <textarea name="content" id="content" rows={5} cols={44}></textarea>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="content" className="text-xl font-medium">
+            Description
+          </label>
+          <textarea
+            id="content"
+            className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md resize-none"
+            name="content"
+            rows={5}
+            placeholder="Enter a detailed description"
+          ></textarea>
         </div>
-        <div>
-          <label className="text-xl font-medium">Skills</label>
-          <input type="skills" name="skills" id="skills" />
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="skills" className="text-xl font-medium rounded-md">
+            Skills
+          </label>
+          <input
+            id="skills"
+            className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md"
+            type="text"
+            name="skills"
+            placeholder="Enter required skills"
+            required
+          />
         </div>
-        <div>
-          <label className="text-xl font-medium">Site URL</label>
-          <input type="url" name="" id="" />
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="siteUrl" className="text-xl font-medium rounded-md">
+            Site URL
+          </label>
+          <input
+            id="siteUrl"
+            className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md"
+            type="url"
+            name="siteUrl"
+            placeholder="Enter the project URL"
+            required
+          />
         </div>
-        <div>
-          <label className="text-xl font-medium">Image</label>
-          <input type="file" name="" id="" />
+
+        <div className="flex gap-2 justify-between mt-4">
+          <div>
+            <label htmlFor="image" className="text-xl font-medium">
+              Image
+            </label>
+            <input
+              id="image"
+              type="file"
+              name="image"
+              accept="image/*"
+              className="cursor-pointer"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-green-600 p-2 cursor-pointer text-white hover:bg-green-500 text-xl font-semibold w-48 rounded-md border-blue-500 border-2 transition duration-300 ease-in"
+          >
+            Save
+          </button>
         </div>
-      </div>
+      </form>
     </BigDropdown>
   );
 };

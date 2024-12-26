@@ -4,12 +4,32 @@ import DeleteProject from "@/components/deleteProject";
 import Menu from "@/components/menu";
 import UpdateProject from "@/components/updateProject";
 import ViewProject from "@/components/viewProject";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { GoPlusCircle } from "react-icons/go";
 import { HiOutlineRefresh } from "react-icons/hi";
 
 const Projects = () => {
   const [funcHandler, setFuncHandler] = useState("");
+
+  //API CONNECTIONS
+  const [allProjectsData, setAllProjectsData] = useState([]);
+
+  const getAllProjects = async () => {
+    try {
+      const allProjects = await axios.get(
+        "http://localhost:4000/api/get-projects"
+      );
+      setAllProjectsData(allProjects.data.projects);
+    } catch (error) {
+      alert("DB bağlantısında hata!", error);
+    }
+  };
+
+  useEffect(() => {
+    getAllProjects();
+  }, []);
+  console.log(allProjectsData[1]);
 
   return (
     <div className="flex lg:flex-row flex-col">
@@ -47,32 +67,39 @@ const Projects = () => {
               </tr>
             </thead>
             <tbody className="">
-              <tr className="hover:bg-turkuaz transition duration-500 cursor-pointer odd:bg-gray-200 even:bg-white ">
-                <td className=" text-start p-2 border ">Başlık1</td>
-                <td className=" text-start p-2 lg:table-cell hidden border ">
-                  Tarih falan
-                </td>
-                <td className=" text-start p-2 gap-1 flex text-beyaz border ">
-                  <span
-                    onClick={() => setFuncHandler("View Project")}
-                    className="bg-blue-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
+              {allProjectsData.map((data) => {
+                return (
+                  <tr
+                    key={data._id}
+                    className="hover:bg-turkuaz transition duration-500 cursor-pointer odd:bg-gray-200 even:bg-white "
                   >
-                    View
-                  </span>
-                  <span
-                    onClick={() => setFuncHandler("Update Project")}
-                    className="bg-green-600 hover:scale-110 transition-all duration-500 hover:-rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
-                  >
-                    Update
-                  </span>
-                  <span
-                    onClick={() => setFuncHandler("Delete Project")}
-                    className="bg-red-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
-                  >
-                    Delete
-                  </span>
-                </td>
-              </tr>
+                    <td className=" text-start p-2 border ">{data.title}</td>
+                    <td className=" text-start p-2 lg:table-cell hidden border ">
+                      {data.summary}
+                    </td>
+                    <td className=" text-start p-2 gap-1 flex text-beyaz border ">
+                      <span
+                        onClick={() => setFuncHandler("View Project")}
+                        className="bg-blue-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
+                      >
+                        View
+                      </span>
+                      <span
+                        onClick={() => setFuncHandler("Update Project")}
+                        className="bg-green-600 hover:scale-110 transition-all duration-500 hover:-rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
+                      >
+                        Update
+                      </span>
+                      <span
+                        onClick={() => setFuncHandler("Delete Project")}
+                        className="bg-red-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
+                      >
+                        Delete
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
