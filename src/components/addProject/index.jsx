@@ -77,8 +77,8 @@ const AddProject = (props) => {
           />
         </div>
 
-        <div className="flex gap-2 justify-between mt-4">
-          <div>
+        <div className="flex gap-4 justify-between mt-4 flex-wrap">
+          <div className="gap-2 flex">
             <label htmlFor="image" className="text-xl font-medium">
               Image
             </label>
@@ -88,11 +88,12 @@ const AddProject = (props) => {
               name="image"
               accept="image/*"
               className="cursor-pointer"
+              multiple
             />
           </div>
           <button
             type="submit"
-            className="bg-green-600 p-2 cursor-pointer text-white hover:bg-green-500 text-xl font-semibold w-48 rounded-md border-blue-500 border-2 transition duration-300 ease-in"
+            className="bg-green-600 py-2 px-8 cursor-pointer text-white hover:bg-green-500 text-xl font-semibold sm:w-auto w-full rounded-md border-blue-500 border-2 transition duration-300 ease-in"
           >
             Save
           </button>

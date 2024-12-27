@@ -11,8 +11,11 @@ import { HiOutlineRefresh } from "react-icons/hi";
 
 const Projects = () => {
   const [funcHandler, setFuncHandler] = useState("");
+  const [deleteModal, setDeleteModal] = useState(false);
 
   //API CONNECTIONS
+
+  // GET ALL PROJECTS
   const [allProjectsData, setAllProjectsData] = useState([]);
 
   const getAllProjects = async () => {
@@ -27,9 +30,26 @@ const Projects = () => {
   };
 
   useEffect(() => {
-    getAllProjects();
+    const fetchData = async () => {
+      await getAllProjects();
+    };
+    fetchData();
   }, []);
-  console.log(allProjectsData[1]);
+
+  //VIEW PROJECT DETAILS
+  const [detailsProjectData, setDetailsProjectData] = useState({});
+  const getDetailsProject = async (id) => {
+    try {
+      const d = await axios.get(
+        `http://localhost:4000/api/details-project?_id=${id}`
+      );
+      setDetailsProjectData(d.data.selectedProject);
+      console.log(detailsProjectData);
+    } catch (error) {
+      console.log(error);
+      alert("DB bağlantısında hata!");
+    }
+  };
 
   return (
     <div className="flex lg:flex-row flex-col">
@@ -37,25 +57,28 @@ const Projects = () => {
       <div className="p-4 w-full h-[calc(100vh-100px)]">
         <h2 className="text-2xl font-medium mb-5 mt-2">Projects</h2>
         <div className="flex w-full mb-2 gap-2 items-center ">
-          <span className="bg-white border border-turkuaz transition  duration-500 cursor-pointer rounded-lg py-1 px-2 flex items-center gap-1 group">
+          <span
+            onClick={() => getAllProjects()}
+            className="bg-white border border-turkuaz transition text-lg duration-500 cursor-pointer rounded-lg py-1 px-3 flex items-center gap-1 group"
+          >
             <HiOutlineRefresh
-              size={18}
+              size={20}
               className="group-hover:rotate-180 transition-transform duration-500 "
             />
             Refresh
           </span>
           <span
             onClick={() => setFuncHandler("Add Project")}
-            className="bg-green-700 select-none text-white border cursor-pointer rounded-lg py-1 px-2 flex items-center gap-1 group"
+            className="bg-green-700 select-none text-white border text-lg cursor-pointer rounded-lg py-1 px-3 flex items-center gap-1 group"
           >
             <GoPlusCircle
-              size={20}
+              size={22}
               className="group-hover:rotate-180 transition-transform duration-500"
             />
             Add Project
           </span>
         </div>
-        <div className="sm:h-full h-[calc(100vh-250px)] overflow-auto border ">
+        <div className="overflow-auto border ">
           <table className="w-full table-fixed ">
             <thead className="text-lg sticky top-0 ">
               <tr className="bg-turuncu text-beyaz ">
@@ -79,7 +102,10 @@ const Projects = () => {
                     </td>
                     <td className=" text-start p-2 gap-1 flex text-beyaz border ">
                       <span
-                        onClick={() => setFuncHandler("View Project")}
+                        onClick={() => {
+                          setFuncHandler("View Project");
+                          getDetailsProject(data._id);
+                        }}
                         className="bg-blue-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
                       >
                         View
@@ -91,7 +117,7 @@ const Projects = () => {
                         Update
                       </span>
                       <span
-                        onClick={() => setFuncHandler("Delete Project")}
+                        onClick={() => setDeleteModal(true)}
                         className="bg-red-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
                       >
                         Delete
@@ -111,6 +137,7 @@ const Projects = () => {
       )}
       {funcHandler === "View Project" ? (
         <ViewProject
+          detailsProjectData={detailsProjectData}
           setFuncHandler={setFuncHandler}
           funcHandler={funcHandler}
         />
@@ -125,10 +152,10 @@ const Projects = () => {
       ) : (
         <div></div>
       )}
-      {funcHandler === "Delete Project" ? (
+      {deleteModal ? (
         <DeleteProject
-          setFuncHandler={setFuncHandler}
-          funcHandler={funcHandler}
+          deleteModal={deleteModal}
+          setDeleteModal={setDeleteModal}
         />
       ) : (
         <div></div>
