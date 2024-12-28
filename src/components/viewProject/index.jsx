@@ -43,12 +43,12 @@ const ViewProject = ({ setFuncHandler, funcHandler, detailsProjectData }) => {
               detailsProjectData.image_url.map((item, index) => (
                 <div
                   key={index}
-                  className="border border-black rounded-md p-2 w-32 h-32"
+                  className="border border-black rounded-md p-2 w-32 h-32 overflow-hidden"
                 >
                   <img
                     src={`http://localhost:4000${item}`}
                     alt={`Uploaded file ${index + 1}`}
-                    className="max-w-full h-auto"
+                    className="object-contain"
                   />
                 </div>
               ))

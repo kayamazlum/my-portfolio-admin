@@ -8,6 +8,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { GoPlusCircle } from "react-icons/go";
 import { HiOutlineRefresh } from "react-icons/hi";
+import { ToastContainer, toast } from "react-toastify";
 
 const Projects = () => {
   const [funcHandler, setFuncHandler] = useState("");
@@ -17,13 +18,13 @@ const Projects = () => {
 
   // GET ALL PROJECTS
   const [allProjectsData, setAllProjectsData] = useState([]);
-
   const getAllProjects = async () => {
     try {
       const allProjects = await axios.get(
         "http://localhost:4000/api/get-projects"
       );
-      setAllProjectsData(allProjects.data.projects);
+      setAllProjectsData(allProjects.data.projects || []);
+      console.log(allProjects);
     } catch (error) {
       alert("DB bağlantısında hata!", error);
     }
@@ -51,15 +52,29 @@ const Projects = () => {
     }
   };
 
+  //DELETE PROJECT
+  const [selectedId, setSelectedId] = useState(null);
+  const deleteProject = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/delete-project`, {
+        data: { _id: id },
+      });
+      toast.success("Project deleted successfully", { autoClose: 3000 });
+      getAllProjects();
+    } catch (error) {
+      alert("DB bağlantısında hata!", error);
+    }
+  };
+
   return (
     <div className="flex lg:flex-row flex-col">
       <Menu />
       <div className="p-4 w-full h-[calc(100vh-100px)]">
         <h2 className="text-2xl font-medium mb-5 mt-2">Projects</h2>
-        <div className="flex w-full mb-2 gap-2 items-center ">
+        <div className="flex w-full mb-2 gap-2 items-center">
           <span
             onClick={() => getAllProjects()}
-            className="bg-white border border-turkuaz transition text-lg duration-500 cursor-pointer rounded-lg py-1 px-3 flex items-center gap-1 group"
+            className="bg-white border border-turkuaz transition text-lg duration-500 cursor-pointer rounded-lg py-2 px-3 flex items-center gap-1 group"
           >
             <HiOutlineRefresh
               size={20}
@@ -69,7 +84,7 @@ const Projects = () => {
           </span>
           <span
             onClick={() => setFuncHandler("Add Project")}
-            className="bg-green-700 select-none text-white border text-lg cursor-pointer rounded-lg py-1 px-3 flex items-center gap-1 group"
+            className="bg-green-700 select-none text-white border text-lg cursor-pointer rounded-lg py-2 px-3 flex items-center gap-1 group"
           >
             <GoPlusCircle
               size={22}
@@ -78,57 +93,69 @@ const Projects = () => {
             Add Project
           </span>
         </div>
-        <div className="overflow-auto border ">
-          <table className="w-full table-fixed ">
-            <thead className="text-lg sticky top-0 ">
-              <tr className="bg-turuncu text-beyaz ">
-                <th className=" text-start p-2 lg:w-[50%] ">Title</th>
-                <th className=" text-start p-2 lg:w-[20%]  lg:table-cell hidden">
-                  Date
-                </th>
-                <th className=" text-start p-2 lg:w-[30%] ">Function</th>
-              </tr>
-            </thead>
-            <tbody className="">
-              {allProjectsData.map((data) => {
-                return (
-                  <tr
-                    key={data._id}
-                    className="hover:bg-turkuaz transition duration-500 cursor-pointer odd:bg-gray-200 even:bg-white "
-                  >
-                    <td className=" text-start p-2 border ">{data.title}</td>
-                    <td className=" text-start p-2 lg:table-cell hidden border ">
-                      {data.summary}
-                    </td>
-                    <td className=" text-start p-2 gap-1 flex text-beyaz border ">
-                      <span
-                        onClick={() => {
-                          setFuncHandler("View Project");
-                          getDetailsProject(data._id);
-                        }}
-                        className="bg-blue-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
-                      >
-                        View
-                      </span>
-                      <span
-                        onClick={() => setFuncHandler("Update Project")}
-                        className="bg-green-600 hover:scale-110 transition-all duration-500 hover:-rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
-                      >
-                        Update
-                      </span>
-                      <span
-                        onClick={() => setDeleteModal(true)}
-                        className="bg-red-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
-                      >
-                        Delete
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div className="overflow-auto border">
+          {allProjectsData.length > 0 ? (
+            <table className="w-full table-auto">
+              <thead className="text-lg sticky top-0 ">
+                <tr className="bg-turuncu text-beyaz ">
+                  <th className=" text-start p-2 lg:w-[50%] w-auto">Title</th>
+                  <th className=" text-start p-2 lg:w-[20%] w-auto lg:table-cell hidden">
+                    Date
+                  </th>
+                  <th className=" text-start p-2 lg:w-[30%] w-auto">
+                    Function
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="">
+                {allProjectsData.map((data) => {
+                  return (
+                    <tr
+                      key={data._id}
+                      className="hover:bg-turkuaz transition duration-500 cursor-pointer odd:bg-gray-200 even:bg-white "
+                    >
+                      <td className=" text-start p-2 border ">{data.title}</td>
+                      <td className=" text-start p-2 lg:table-cell hidden border ">
+                        {data.updated_at}
+                      </td>
+                      <td className=" text-start p-2 gap-1 flex text-beyaz items-center">
+                        <span
+                          onClick={() => {
+                            setFuncHandler("View Project");
+                            getDetailsProject(data._id);
+                          }}
+                          className="bg-blue-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
+                        >
+                          View
+                        </span>
+                        <span
+                          onClick={() => setFuncHandler("Update Project")}
+                          className="bg-green-600 hover:scale-110 transition-all duration-500 hover:-rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
+                        >
+                          Update
+                        </span>
+                        <span
+                          onClick={() => {
+                            setDeleteModal(true);
+                            setSelectedId(data._id);
+                          }}
+                          className="bg-red-600 hover:scale-110 transition-all duration-500 hover:rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
+                        >
+                          Delete
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <div className="text-xl my-5 flex items-center justify-center">
+              Projects not found!
+            </div>
+          )}
         </div>
+        <ToastContainer />
       </div>
       {funcHandler === "Add Project" ? (
         <AddProject setFuncHandler={setFuncHandler} funcHandler={funcHandler} />
@@ -154,6 +181,8 @@ const Projects = () => {
       )}
       {deleteModal ? (
         <DeleteProject
+          selectedId={selectedId}
+          deleteProject={deleteProject}
           deleteModal={deleteModal}
           setDeleteModal={setDeleteModal}
         />
