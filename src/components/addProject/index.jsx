@@ -2,8 +2,10 @@
 import React, { useState } from "react";
 import BigDropdown from "../bigDropdown";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AddProject = (props) => {
+  const { setFuncHandler, funcHandler } = props;
   const [formData, setFormData] = useState({
     title: "",
     summary: "",
@@ -11,35 +13,35 @@ const AddProject = (props) => {
     skills: "",
     site_url: "",
   });
-
-  const [images, setImages] = useState([]);
-  const [message, setMessage] = useState("");
+  const [files, setFiles] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleFileChange = (e) => {
-    setImages(Array.from(e.target.files));
+    setFiles(e.target.files);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!files || files.length === 0) {
+      toast.warn("Please upload at least one image.", { autoClose: 3000 });
+      return;
+    }
 
     const data = new FormData();
-    data.append("title", formData.title);
-    data.append("summary", formData.summary);
-    data.append("content", formData.content);
-    data.append("skills", formData.skills);
-    data.append("site_url", formData.site_url);
 
-    images.forEach((file) => {
-      data.append("files", file);
+    Object.keys(formData).forEach((key) => {
+      data.append(key, formData[key]);
     });
+
+    if (files) {
+      Array.from(files).forEach((file) => {
+        data.append("images", file);
+      });
+    }
 
     try {
       const response = await axios.post(
@@ -51,19 +53,15 @@ const AddProject = (props) => {
           },
         }
       );
-      setMessage(response.data.message);
-      props.setFuncHandler(false);
+      toast.success("Project saved successfully!", { autoClose: 3000 });
     } catch (error) {
-      console.log("Hata: ", error);
-      setMessage("Proje eklenirken hata oluştu!");
+      console.error("Error saving project:", error);
+      alert("An error occurred while saving the project.", error);
     }
   };
 
   return (
-    <BigDropdown
-      setFuncHandler={props.setFuncHandler}
-      funcHandler={props.funcHandler}
-    >
+    <BigDropdown setFuncHandler={setFuncHandler} funcHandler={funcHandler}>
       <form onSubmit={handleSubmit} className="gap-4 flex flex-col">
         <div className="flex flex-col gap-1">
           <label htmlFor="title" className="text-xl font-medium rounded-md">
@@ -109,6 +107,7 @@ const AddProject = (props) => {
             placeholder="Enter a detailed description"
             value={formData.content}
             onChange={handleInputChange}
+            required
           ></textarea>
         </div>
 
@@ -163,7 +162,6 @@ const AddProject = (props) => {
           >
             Save
           </button>
-          {message && <p className="mt-4 text-green-500">{message}</p>}
         </div>
       </form>
     </BigDropdown>
