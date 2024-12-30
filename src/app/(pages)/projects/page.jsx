@@ -129,7 +129,10 @@ const Projects = () => {
                           View
                         </span>
                         <span
-                          onClick={() => setFuncHandler("Update Project")}
+                          onClick={() => {
+                            setFuncHandler("Update Project");
+                            getDetailsProject(data._id);
+                          }}
                           className="bg-green-600 hover:scale-110 transition-all duration-500 hover:-rotate-12 ease-in-out rounded-lg py-1 px-2 select-none"
                         >
                           Update
@@ -171,10 +174,11 @@ const Projects = () => {
       ) : (
         <div></div>
       )}
-      {funcHandler === "Update Project" ? (
+      {funcHandler === "Update Project" && detailsProjectData ? (
         <UpdateProject
           setFuncHandler={setFuncHandler}
           funcHandler={funcHandler}
+          detailsProjectData={detailsProjectData}
         />
       ) : (
         <div></div>
