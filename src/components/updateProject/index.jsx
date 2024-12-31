@@ -51,6 +51,7 @@ const UpdateProject = (props) => {
           },
         }
       );
+      setFuncHandler(!funcHandler);
       toast.success("Project updated successfully!", { autoClose: 3000 });
     } catch (error) {
       toast.warning("Failed to update the project. Please try again.");
@@ -168,8 +169,8 @@ const UpdateProject = (props) => {
           />
         </div>
 
-        <div className="flex gap-2 justify-between mt-4">
-          <div>
+        <div className="flex gap-2 justify-between mt-4 flex-col">
+          <div className="flex gap-3 mb-3">
             <label htmlFor="image" className="text-xl font-medium">
               Image
             </label>
@@ -184,7 +185,6 @@ const UpdateProject = (props) => {
             />
           </div>
           <div>
-            <label className="text-xl font-medium">Image</label>
             <div className="flex flex-wrap gap-4 mt-2">
               {filteredImage?.length > 0 ? (
                 filteredImage.map((item, index) => (
@@ -207,9 +207,9 @@ const UpdateProject = (props) => {
                           item,
                         ]);
                       }}
-                      className="absolute right-0 top-0 text-xl text-red-500 px-1 cursor-pointer bg-blue-50 rounded-full"
+                      className="absolute right-0 top-0 text-xl font-bold text-white border-white hover:bg-black transition duration-300 px-2 text-center cursor-pointer bg-red-500 border-2 flex items-center justify-center rounded-full"
                     >
-                      X
+                      <span>X</span>
                     </span>
                   </div>
                 ))
@@ -220,7 +220,7 @@ const UpdateProject = (props) => {
           </div>
           <button
             type="submit"
-            className="bg-green-600 p-2 cursor-pointer text-white hover:bg-green-500 text-xl font-semibold w-48 rounded-md border-blue-500 border-2 transition duration-300 ease-in"
+            className="bg-green-600 p-2 cursor-pointer w-full text-white hover:bg-green-500 text-xl font-semibold rounded-md border-blue-500 border-2 transition duration-300 ease-in my-4"
           >
             Save
           </button>
