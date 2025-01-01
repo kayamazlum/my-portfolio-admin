@@ -23,7 +23,8 @@ const Projects = () => {
       const allProjects = await axios.get(
         "http://localhost:4000/api/get-projects"
       );
-      setAllProjectsData(allProjects.data.formattedProjects || []);
+      setAllProjectsData(allProjects.data.projects || []);
+      console.log(allProjects);
     } catch (error) {
       alert("DB bağlantısında hata!", error);
     }
@@ -43,7 +44,8 @@ const Projects = () => {
       const d = await axios.get(
         `http://localhost:4000/api/details-project?_id=${id}`
       );
-      setDetailsProjectData(d.data.formattedProject);
+      setDetailsProjectData(d.data.selectedProject);
+      console.log(detailsProjectData);
     } catch (error) {
       console.log(error);
       alert("DB bağlantısında hata!");
@@ -96,8 +98,8 @@ const Projects = () => {
             <table className="w-full table-auto">
               <thead className="text-lg sticky top-0 ">
                 <tr className="bg-turuncu text-beyaz ">
-                  <th className=" text-start p-2 lg:w-[40%] w-auto">Title</th>
-                  <th className=" text-start p-2 lg:w-[30%] w-auto lg:table-cell hidden">
+                  <th className=" text-start p-2 lg:w-[50%] w-auto">Title</th>
+                  <th className=" text-start p-2 lg:w-[20%] w-auto lg:table-cell hidden">
                     Date
                   </th>
                   <th className=" text-start p-2 lg:w-[30%] w-auto">
@@ -116,7 +118,7 @@ const Projects = () => {
                       <td className=" text-start p-2 lg:table-cell hidden border ">
                         {data.updated_at}
                       </td>
-                      <td className="text-start p-2 gap-1 flex text-beyaz items-center ">
+                      <td className=" text-start p-2 gap-1 flex text-beyaz items-center">
                         <span
                           onClick={() => {
                             setFuncHandler("View Project");
@@ -174,6 +176,7 @@ const Projects = () => {
       )}
       {funcHandler === "Update Project" && detailsProjectData ? (
         <UpdateProject
+          getAllProjects={getAllProjects}
           setFuncHandler={setFuncHandler}
           funcHandler={funcHandler}
           detailsProjectData={detailsProjectData}

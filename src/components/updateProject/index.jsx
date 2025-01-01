@@ -5,7 +5,12 @@ import BigDropdown from "../bigDropdown";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const UpdateProject = ({ funcHandler, setFuncHandler, detailsProjectData }) => {
+const UpdateProject = ({
+  funcHandler,
+  setFuncHandler,
+  detailsProjectData,
+  getAllProjects,
+}) => {
   const [formData, setFormData] = useState({
     title: "",
     summary: "",
@@ -22,6 +27,7 @@ const UpdateProject = ({ funcHandler, setFuncHandler, detailsProjectData }) => {
   useEffect(() => {
     if (detailsProjectData) {
       setFormData({
+        _id: detailsProjectData._id || "",
         title: detailsProjectData.title || "",
         summary: detailsProjectData.summary || "",
         content: detailsProjectData.content || "",
@@ -58,8 +64,9 @@ const UpdateProject = ({ funcHandler, setFuncHandler, detailsProjectData }) => {
         },
       });
 
-      setFuncHandler(!funcHandler);
       toast.success("Project updated successfully!", { autoClose: 3000 });
+      getAllProjects();
+      setFuncHandler(!funcHandler);
     } catch (error) {
       toast.warning("Failed to update the project. Please try again.");
     }
