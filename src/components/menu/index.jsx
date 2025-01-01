@@ -7,7 +7,7 @@ const Menu = (props) => {
       <div className="w-full py-4 px-2 border-b-2 font-medium flex justify-end">
         Admin
       </div>
-      <div className="flex flex-row lg:flex-col lg:justify-start justify-center gap-1">
+      <div className="flex flex-row lg:flex-col lg:justify-start justify-center gap-2">
         <MenuButton
           setSelected={props.setSelected}
           link={"projects"}
