@@ -1,30 +1,40 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import BigDropdown from "../bigDropdown";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const UpdateProject = (props) => {
-  const { funcHandler, setFuncHandler, detailsProjectData } = props;
-  console.log(detailsProjectData);
-
+const UpdateProject = ({ funcHandler, setFuncHandler, detailsProjectData }) => {
   const [formData, setFormData] = useState({
-    // _id: "",
-    // title: "",
-    // summary: detailsProjectData?.summary,
-    // content: "",
-    // skills: "",
-    // site_url: "",
+    title: "",
+    summary: "",
+    content: "",
+    skills: "",
+    site_url: "",
   });
 
   const [files, setFiles] = useState([]);
+  const [deletedImages, setDeletedImages] = useState([]);
+  const [filteredImage, setFilteredImage] = useState([]);
 
-  const hanleInputChange = (e) => {
+  // Set form data when detailsProjectData changes
+  useEffect(() => {
+    if (detailsProjectData) {
+      setFormData({
+        title: detailsProjectData.title || "",
+        summary: detailsProjectData.summary || "",
+        content: detailsProjectData.content || "",
+        skills: detailsProjectData.skills || "",
+        site_url: detailsProjectData.site_url || "",
+      });
+      setFilteredImage(detailsProjectData.image_url || []);
+    }
+  }, [detailsProjectData]);
+
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // onChange={(e) =>
-    //   setFormData((prev) => ({ ...prev, summary: e.target.value }))
-    // }
   };
 
   const handleSubmit = async (e) => {
@@ -42,15 +52,12 @@ const UpdateProject = (props) => {
 
       data.append("deleted_images", deletedImages);
 
-      const response = await axios.put(
-        "http://localhost:4000/api/update-project",
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axios.put("http://localhost:4000/api/update-project", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       setFuncHandler(!funcHandler);
       toast.success("Project updated successfully!", { autoClose: 3000 });
     } catch (error) {
@@ -58,22 +65,16 @@ const UpdateProject = (props) => {
     }
   };
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+  const handleFileChange = (e) => {
+    setFiles(e.target.files);
+  };
 
-  useEffect(() => {
-    if (detailsProjectData) setFormData(detailsProjectData);
-  }, [detailsProjectData]);
-
-  const [deletedImages, setDeletedImages] = useState([]);
-  useEffect(() => {
-    console.log(deletedImages);
-  }, [deletedImages]);
-
-  const [filteredImage, setFilteredImage] = useState(
-    detailsProjectData?.image_url
-  );
+  const handleDeleteImage = (item) => {
+    setFilteredImage((prevImages) =>
+      prevImages.filter((image) => image !== item)
+    );
+    setDeletedImages((prevDeleted) => [...prevDeleted, item]);
+  };
 
   return (
     <BigDropdown setFuncHandler={setFuncHandler} funcHandler={funcHandler}>
@@ -83,10 +84,8 @@ const UpdateProject = (props) => {
             Project Name
           </label>
           <input
-            value={formData?.title}
-            onChange={(e) =>
-              setFormData(() => ({ ...formData, title: e.target.value }))
-            }
+            value={formData.title}
+            onChange={handleInputChange}
             id="title"
             className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md"
             type="text"
@@ -101,14 +100,12 @@ const UpdateProject = (props) => {
             Summary
           </label>
           <input
+            value={formData.summary}
+            onChange={handleInputChange}
             id="summary"
             className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md"
             type="text"
             name="summary"
-            value={formData?.summary}
-            onChange={(e) =>
-              setFormData(() => ({ ...formData, summary: e.target.value }))
-            }
             placeholder="Enter a short summary"
             required
           />
@@ -119,19 +116,15 @@ const UpdateProject = (props) => {
             Description
           </label>
           <textarea
-            value={formData?.content}
-            onChange={(e) =>
-              setFormData(() => ({ ...formData, content: e.target.value }))
-            }
+            value={formData.content}
+            onChange={handleInputChange}
             id="content"
             className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md resize-none"
             name="content"
             rows={5}
             placeholder="Enter a detailed description"
             required
-          >
-            {formData?.content}
-          </textarea>
+          />
         </div>
 
         <div className="flex flex-col gap-1">
@@ -139,10 +132,8 @@ const UpdateProject = (props) => {
             Skills
           </label>
           <input
-            value={formData?.skills}
-            onChange={(e) =>
-              setFormData(() => ({ ...formData, skills: e.target.value }))
-            }
+            value={formData.skills}
+            onChange={handleInputChange}
             id="skills"
             className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md"
             type="text"
@@ -157,10 +148,8 @@ const UpdateProject = (props) => {
             Site URL
           </label>
           <input
-            value={formData?.site_url}
-            onChange={(e) =>
-              setFormData(() => ({ ...formData, site_url: e.target.value }))
-            }
+            value={formData.site_url}
+            onChange={handleInputChange}
             id="site_url"
             className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md"
             type="url"
@@ -181,12 +170,12 @@ const UpdateProject = (props) => {
               accept="image/*"
               className="cursor-pointer"
               multiple
-              onChange={(e) => setFiles(e.target.files)}
+              onChange={handleFileChange}
             />
           </div>
           <div>
             <div className="flex flex-wrap gap-4 mt-2">
-              {filteredImage?.length > 0 ? (
+              {filteredImage.length > 0 ? (
                 filteredImage.map((item, index) => (
                   <div
                     key={item}
@@ -198,18 +187,10 @@ const UpdateProject = (props) => {
                       className="object-contain"
                     />
                     <span
-                      onClick={() => {
-                        setFilteredImage((prevImages) =>
-                          prevImages.filter((image) => image !== item)
-                        );
-                        setDeletedImages((prevDeleted) => [
-                          ...prevDeleted,
-                          item,
-                        ]);
-                      }}
+                      onClick={() => handleDeleteImage(item)}
                       className="absolute right-0 top-0 text-xl font-bold text-white border-white hover:bg-black transition duration-300 px-2 text-center cursor-pointer bg-red-500 border-2 flex items-center justify-center rounded-full"
                     >
-                      <span>X</span>
+                      X
                     </span>
                   </div>
                 ))
