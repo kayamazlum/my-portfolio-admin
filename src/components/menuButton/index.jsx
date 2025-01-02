@@ -11,7 +11,6 @@ const MenuButton = (props) => {
   useEffect(() => {
     setCurrentUrl(window.location.href);
   }, []);
-  console.log(currentUrl);
 
   const isActive =
     currentUrl === `${process.env.NEXT_PUBLIC_ADMIN_URI}/${link}`;
@@ -19,9 +18,9 @@ const MenuButton = (props) => {
   return (
     <div
       onClick={() => router.push(`/${link}`)}
-      className={`w-full py-4 px-2 duration-500 transition ease-in border-x-8 border-transparent hover:border-turuncu ${
+      className={`w-full py-4 px-2 duration-500 transition ease-in border-b-4 border-white hover:border-turkuaz ${
         isActive ? "bg-turuncu " : "bg-mavi"
-      } text-beyaz transition duration-500 cursor-pointer font-medium`}
+      } text-beyaz transition duration-500 cursor-pointer font-medium text-lg`}
     >
       {text}
     </div>

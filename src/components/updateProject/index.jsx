@@ -58,11 +58,15 @@ const UpdateProject = ({
 
       data.append("deleted_images", deletedImages);
 
-      await axios.put("http://localhost:4000/api/update-project", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/update-project`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       toast.success("Project updated successfully!", { autoClose: 3000 });
       getAllProjects();

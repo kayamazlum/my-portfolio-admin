@@ -45,7 +45,7 @@ const AddProject = (props) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/add-project",
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/add-project`,
         data,
         {
           headers: {

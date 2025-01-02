@@ -21,7 +21,7 @@ const Projects = () => {
   const getAllProjects = async () => {
     try {
       const allProjects = await axios.get(
-        "http://localhost:4000/api/get-projects"
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/get-projects`
       );
       setAllProjectsData(allProjects.data.projects || []);
       console.log(allProjects);
@@ -42,7 +42,7 @@ const Projects = () => {
   const getDetailsProject = async (id) => {
     try {
       const d = await axios.get(
-        `http://localhost:4000/api/details-project?_id=${id}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/details-project?_id=${id}`
       );
       setDetailsProjectData(d.data.selectedProject);
       console.log(detailsProjectData);
@@ -56,9 +56,12 @@ const Projects = () => {
   const [selectedId, setSelectedId] = useState(null);
   const deleteProject = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/api/delete-project`, {
-        data: { _id: id },
-      });
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/delete-project`,
+        {
+          data: { _id: id },
+        }
+      );
       toast.success("Project deleted successfully", { autoClose: 3000 });
       getAllProjects();
     } catch (error) {
@@ -74,7 +77,7 @@ const Projects = () => {
         <div className="flex w-full mb-2 gap-2 items-center">
           <span
             onClick={() => getAllProjects()}
-            className="bg-white border border-turkuaz transition text-lg duration-500 cursor-pointer rounded-lg py-2 px-3 flex items-center gap-1 group"
+            className="bg-white border border-turkuaz transition text-lg duration-500 cursor-pointer rounded-lg py-2 px-3 flex items-center gap-1 group select-none"
           >
             <HiOutlineRefresh
               size={20}
