@@ -10,6 +10,11 @@ const Menu = (props) => {
       <div className="flex flex-row lg:flex-col lg:justify-start justify-center ">
         <MenuButton
           setSelected={props.setSelected}
+          link={"hero"}
+          text={"Hero"}
+        />
+        <MenuButton
+          setSelected={props.setSelected}
           link={"projects"}
           text={"Projects"}
         />
