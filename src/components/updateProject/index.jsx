@@ -17,6 +17,7 @@ const UpdateProject = ({
     content: "",
     skills: "",
     site_url: "",
+    git_repo_url: "",
   });
 
   const [files, setFiles] = useState([]);
@@ -33,6 +34,7 @@ const UpdateProject = ({
         content: detailsProjectData.content || "",
         skills: detailsProjectData.skills || "",
         site_url: detailsProjectData.site_url || "",
+        git_repo_url: detailsProjectData.git_repo_url || "",
       });
       setFilteredImage(detailsProjectData.image_url || []);
     }
@@ -166,6 +168,24 @@ const UpdateProject = ({
             type="url"
             name="site_url"
             placeholder="Enter the project URL"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label
+            htmlFor="git_repo_url"
+            className="text-xl font-medium rounded-md"
+          >
+            Git Repo
+          </label>
+          <input
+            value={formData.git_repo_url}
+            onChange={handleInputChange}
+            id="git_repo_url"
+            className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md"
+            type="url"
+            name="git_repo_url"
+            placeholder="Enter the Git Repo URL"
           />
         </div>
 

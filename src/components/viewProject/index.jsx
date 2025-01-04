@@ -37,6 +37,10 @@ const ViewProject = ({ setFuncHandler, funcHandler, detailsProjectData }) => {
           <p className="text-lg">{detailsProjectData?.site_url}</p>
         </div>
         <div>
+          <label className="text-xl font-medium">Git Repo</label>
+          <p className="text-lg">{detailsProjectData?.git_repo_url}</p>
+        </div>
+        <div>
           <label className="text-xl font-medium">Image</label>
           <div className="flex flex-wrap gap-4 mt-2">
             {detailsProjectData?.image_url?.length > 0 ? (

@@ -12,6 +12,7 @@ const AddProject = (props) => {
     content: "",
     skills: "",
     site_url: "",
+    git_repo_url: "",
   });
   const [files, setFiles] = useState(null);
 
@@ -129,7 +130,7 @@ const AddProject = (props) => {
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="siteUrl" className="text-xl font-medium rounded-md">
+          <label htmlFor="site_url" className="text-xl font-medium rounded-md">
             Site URL
           </label>
           <input
@@ -139,6 +140,23 @@ const AddProject = (props) => {
             name="site_url"
             placeholder="Enter the project URL"
             value={formData.site_url}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label
+            htmlFor="gir_repo_url"
+            className="text-xl font-medium rounded-md"
+          >
+            Git Repo
+          </label>
+          <input
+            id="git_repo_url"
+            className="border border-turkuaz p-2 focus:outline-blue-500 rounded-md"
+            type="url"
+            name="git_repo_url"
+            placeholder="Enter the project Git Repo URL"
+            value={formData.git_repo_url}
             onChange={handleInputChange}
           />
         </div>
