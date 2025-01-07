@@ -157,7 +157,7 @@ const UpdateProject = ({
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="siteUrl" className="text-xl font-medium rounded-md">
+          <label htmlFor="site_url" className="text-xl font-medium rounded-md">
             Site URL
           </label>
           <input
