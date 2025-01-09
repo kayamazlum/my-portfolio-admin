@@ -1,17 +1,22 @@
 "use client";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 const Auth = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+  const router = useRouter();
   const login = async (e) => {
     e.preventDefault();
     setError(""); // Önceki hatayı temizle
 
     try {
+      if (!username.trim() || !password.trim()) {
+        return toast.error("Lütfen giriş yapın!", { autoClose: 3000 });
+      }
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/login`,
         {
@@ -20,9 +25,12 @@ const Auth = () => {
         }
       );
 
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        toast.success("Giriş başarılı");
+        router.push("/projects");
+      }
       console.log("Giriş başarılı!", res.data);
-      localStorage.setItem("token", res.data.token);
-      alert("Giriş başarılı");
     } catch (err) {
       // Hata durumunda, doğru hata mesajını yakalayalım
       if (err.response) {
@@ -81,6 +89,7 @@ const Auth = () => {
             </span>
           </div>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );

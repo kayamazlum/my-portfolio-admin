@@ -5,12 +5,22 @@ import Menu from "@/components/menu";
 import UpdateProject from "@/components/updateProject";
 import ViewProject from "@/components/viewProject";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { GoPlusCircle } from "react-icons/go";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { ToastContainer, toast } from "react-toastify";
 
 const Projects = () => {
+  const router = useRouter();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/");
+    }
+    console.log("TOKENNNNNNN", token);
+  }, []);
+
   const [funcHandler, setFuncHandler] = useState("");
   const [deleteModal, setDeleteModal] = useState(false);
 
@@ -56,16 +66,25 @@ const Projects = () => {
   const [selectedId, setSelectedId] = useState(null);
   const deleteProject = async (id) => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return toast.error("Yetkiniz yok!");
+      }
+      console.log(token);
+
       await axios.delete(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/delete-project`,
         {
           data: { _id: id },
+          headers: { Authorization: `${token}` },
         }
       );
       toast.success("Project deleted successfully", { autoClose: 3000 });
       getAllProjects();
     } catch (error) {
-      alert("DB bağlantısında hata!", error);
+      console.log(error.response.data.message);
+
+      toast.error(error.response.data.message);
     }
   };
 
