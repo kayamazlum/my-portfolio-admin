@@ -26,9 +26,15 @@ const About = () => {
   const updateHero = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return toast.error("Yetki yok!");
+      }
+
       const response = axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/update-hero`,
-        getHeroData
+        getHeroData,
+        { headers: { Authorization: token } }
       );
       toast.success("Hero updated successfully!", { autoClose: 3000 });
     } catch (error) {

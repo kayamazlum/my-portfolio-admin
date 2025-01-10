@@ -27,30 +27,36 @@ const AddProject = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!files || files.length === 0) {
-      toast.warn("Please upload at least one image.", { autoClose: 3000 });
-      return;
-    }
-
-    const data = new FormData();
-
-    Object.keys(formData).forEach((key) => {
-      data.append(key, formData[key]);
-    });
-
-    if (files) {
-      Array.from(files).forEach((file) => {
-        data.append("images", file);
-      });
-    }
-
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return toast.error("Yetkiniz yok!");
+      }
+
+      if (!files || files.length === 0) {
+        toast.warn("Please upload at least one image.", { autoClose: 3000 });
+        return;
+      }
+
+      const data = new FormData();
+
+      Object.keys(formData).forEach((key) => {
+        data.append(key, formData[key]);
+      });
+
+      if (files) {
+        Array.from(files).forEach((file) => {
+          data.append("images", file);
+        });
+      }
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/add-project`,
         data,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: token,
           },
         }
       );

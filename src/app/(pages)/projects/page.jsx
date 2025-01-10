@@ -70,20 +70,19 @@ const Projects = () => {
       if (!token) {
         return toast.error("Yetkiniz yok!");
       }
-      console.log(token);
+      // console.log(token);
 
       await axios.delete(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/delete-project`,
         {
           data: { _id: id },
-          headers: { Authorization: `${token}` },
+          headers: { Authorization: token },
         }
       );
       toast.success("Project deleted successfully", { autoClose: 3000 });
       getAllProjects();
     } catch (error) {
       console.log(error.response.data.message);
-
       toast.error(error.response.data.message);
     }
   };

@@ -28,6 +28,11 @@ const About = () => {
     setIsLoading(true); // Loading durumunu başlat
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return toast.error("Yetki yok!");
+      }
+
       const updatedData = {
         ...getAboutData,
         about_skills: Array.isArray(getAboutData.about_skills)
@@ -39,7 +44,8 @@ const About = () => {
 
       await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/update-about`,
-        updatedData
+        updatedData,
+        { headers: { Authorization: token } }
       );
       toast.success("About updated successfully!", { autoClose: 3000 });
     } catch (error) {

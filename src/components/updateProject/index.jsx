@@ -49,6 +49,11 @@ const UpdateProject = ({
     e.preventDefault();
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return toast.error("Yetkiniz yok!");
+      }
+
       const data = new FormData();
       Object.keys(formData).forEach((key) => {
         data.append(key, formData[key]);
@@ -66,6 +71,7 @@ const UpdateProject = ({
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: token,
           },
         }
       );
