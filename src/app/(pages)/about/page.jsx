@@ -49,7 +49,7 @@ const About = () => {
       );
       toast.success("About updated successfully!", { autoClose: 3000 });
     } catch (error) {
-      toast.error("An error occurred while updating!", { autoClose: 3000 });
+      toast.error(error.response.data.message, { autoClose: 3000 });
       console.error("Update error:", error);
     } finally {
       setIsLoading(false); // Loading durumunu bitir

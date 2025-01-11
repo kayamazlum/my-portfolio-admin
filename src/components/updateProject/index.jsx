@@ -80,7 +80,7 @@ const UpdateProject = ({
       getAllProjects();
       setFuncHandler(!funcHandler);
     } catch (error) {
-      toast.warning("Failed to update the project. Please try again.");
+      toast.warning(error.response.data.message);
     }
   };
 

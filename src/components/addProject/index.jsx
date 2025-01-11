@@ -61,11 +61,10 @@ const AddProject = (props) => {
         }
       );
       setFuncHandler(!funcHandler);
-
       toast.success("Project saved successfully!", { autoClose: 3000 });
     } catch (error) {
       console.error("Error saving project:", error);
-      alert("An error occurred while saving the project.", error);
+      toast.error(error.response.data.message);
     }
   };
 

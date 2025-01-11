@@ -31,14 +31,14 @@ const About = () => {
         return toast.error("Yetki yok!");
       }
 
-      const response = axios.put(
+      await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/update-hero`,
-        getHeroData,
-        { headers: { Authorization: token } }
+
+        { getHeroData, headers: { Authorization: token } }
       );
       toast.success("Hero updated successfully!", { autoClose: 3000 });
     } catch (error) {
-      alert("An error occurred!", error.message);
+      toast.error(error.response.data.message);
     }
   };
 

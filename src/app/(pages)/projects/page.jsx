@@ -18,7 +18,6 @@ const Projects = () => {
     if (!token) {
       router.push("/");
     }
-    console.log("TOKENNNNNNN", token);
   }, []);
 
   const [funcHandler, setFuncHandler] = useState("");
@@ -68,7 +67,7 @@ const Projects = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        return toast.error("Yetkiniz yok!");
+        return toast.error("Yetki yok!");
       }
       // console.log(token);
 
