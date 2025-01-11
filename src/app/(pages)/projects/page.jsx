@@ -20,6 +20,34 @@ const Projects = () => {
     }
   }, []);
 
+  const [userData, setUserData] = useState([]);
+  const validateToken = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/validate-token`,
+        { headers: { Authorization: `${token}` } }
+      );
+      console.log("Token geçerli:", res.data);
+      setUserData(res.data.user || []);
+      console.log(userData);
+    } catch (error) {
+      console.error("Token doğrulama hatası:", error);
+      toast.error(
+        error.response?.data?.message || "Token doğrulama başarısız!"
+      );
+      router.push("/");
+      return;
+    }
+  };
+  useEffect(() => {
+    const fetcUser = async () => {
+      await validateToken();
+    };
+    fetcUser();
+  }, []);
+  console.log(userData);
+
   const [funcHandler, setFuncHandler] = useState("");
   const [deleteModal, setDeleteModal] = useState(false);
 
@@ -33,9 +61,8 @@ const Projects = () => {
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/get-projects`
       );
       setAllProjectsData(allProjects.data.projects || []);
-      console.log(allProjects);
     } catch (error) {
-      alert("DB bağlantısında hata!", error);
+      toast.error("DB bağlantısında hata!", error);
     }
   };
 
@@ -88,7 +115,7 @@ const Projects = () => {
 
   return (
     <div className="flex lg:flex-row flex-col">
-      <Menu />
+      <Menu userData={userData} />
       <div className="p-4 w-full h-[calc(100vh-100px)]">
         <h2 className="text-2xl font-medium mb-5 mt-2">Projects</h2>
         <div className="flex w-full mb-2 gap-2 items-center">
