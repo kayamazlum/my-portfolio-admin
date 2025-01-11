@@ -16,7 +16,7 @@ const Projects = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/");
+      return router.push("/");
     }
   }, []);
 
@@ -24,6 +24,9 @@ const Projects = () => {
   const validateToken = async () => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        return router.push("/");
+      }
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/validate-token`,
         { headers: { Authorization: `${token}` } }
@@ -32,7 +35,7 @@ const Projects = () => {
       setUserData(res.data.user || []);
       console.log(userData);
     } catch (error) {
-      console.error("Token doğrulama hatası:", error);
+      console.log("Token doğrulama hatası:", error.response?.data?.message);
       toast.error(
         error.response?.data?.message || "Token doğrulama başarısız!"
       );
