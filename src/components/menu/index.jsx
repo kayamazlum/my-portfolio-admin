@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import MenuButton from "../menuButton";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { deleteCookie } from "cookies-next";
 
 const Menu = (props) => {
   const { userData, setSelected } = props;
@@ -12,6 +13,8 @@ const Menu = (props) => {
   const router = useRouter();
   const handleLogout = () => {
     localStorage.removeItem("token");
+    deleteCookie("token");
+    localStorage.removeItem("user");
     router.push("/");
   };
 

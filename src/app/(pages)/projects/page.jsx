@@ -12,51 +12,25 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { ToastContainer, toast } from "react-toastify";
 
 const Projects = () => {
-  const router = useRouter();
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      return router.push("/");
-    }
-  }, []);
-
-  const [userData, setUserData] = useState([]);
-  const validateToken = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        return router.push("/");
-      }
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/validate-token`,
-        { headers: { Authorization: `${token}` } }
-      );
-
-      setUserData(res.data.user || []);
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Token doğrulama başarısız!"
-      );
-      router.push("/");
-      return;
-    }
-  };
-  useEffect(() => {
-    const fetcUser = async () => {
-      await validateToken();
-    };
-    fetcUser();
-  }, []);
-
   const [funcHandler, setFuncHandler] = useState("");
   const [deleteModal, setDeleteModal] = useState(false);
+  const [allProjectsData, setAllProjectsData] = useState([]);
+
+  const userInfo = JSON.parse(localStorage.getItem("user"));
+
+  const token = localStorage.getItem("token");
+
+  const router = useRouter();
 
   //API CONNECTIONS
 
   // GET ALL PROJECTS
-  const [allProjectsData, setAllProjectsData] = useState([]);
+
   const getAllProjects = async () => {
     try {
+      if (!token) {
+        return;
+      }
       const allProjects = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/get-projects`
       );
@@ -71,7 +45,7 @@ const Projects = () => {
       await getAllProjects();
     };
     fetchData();
-  }, []);
+  }, [token]);
 
   //VIEW PROJECT DETAILS
   const [detailsProjectData, setDetailsProjectData] = useState({});
@@ -90,11 +64,9 @@ const Projects = () => {
   const [selectedId, setSelectedId] = useState(null);
   const deleteProject = async (id) => {
     try {
-      const token = localStorage.getItem("token");
       if (!token) {
         return toast.error("Yetki yok!");
       }
-
       await axios.delete(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/delete-project`,
         {
@@ -109,9 +81,15 @@ const Projects = () => {
     }
   };
 
+  useEffect(() => {
+    if (!userInfo?.username || !token) {
+      router.push("/");
+    }
+  }, [userInfo, token]);
+
   return (
     <div className="flex lg:flex-row flex-col">
-      <Menu userData={userData} />
+      <Menu userData={userInfo} />
       <div className="p-4 w-full h-[calc(100vh-100px)]">
         <h2 className="text-2xl font-medium mb-5 mt-2">Projects</h2>
         <div className="flex w-full mb-2 gap-2 items-center">

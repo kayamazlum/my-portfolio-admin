@@ -1,5 +1,7 @@
 "use client";
+import { getUserInformationService } from "@/services/users";
 import axios from "axios";
+import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -11,7 +13,7 @@ const Auth = () => {
   const router = useRouter();
   const login = async (e) => {
     e.preventDefault();
-    setError(""); // Önceki hatayı temizle
+    setError("");
 
     try {
       if (!username.trim() || !password.trim()) {
@@ -27,8 +29,18 @@ const Auth = () => {
 
       if (res?.data?.token) {
         localStorage.setItem("token", res.data.token);
-        toast.success("Giriş başarılı");
-        router.push("/projects");
+        const userInfoResponse = await getUserInformationService();
+        if (userInfoResponse?.data?.user) {
+          setCookie("token", res.data.token);
+          localStorage.setItem(
+            "user",
+            JSON.stringify(userInfoResponse?.data?.user)
+          );
+          toast.success("Giriş başarılı");
+          router.push("/projects");
+        } else {
+          toast.error("Giriş başarısız");
+        }
       }
     } catch (err) {
       if (err.response) {
