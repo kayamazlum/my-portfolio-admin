@@ -25,22 +25,21 @@ const Auth = () => {
         }
       );
 
-      if (res.data.token) {
+      if (res?.data?.token) {
         localStorage.setItem("token", res.data.token);
         toast.success("Giriş başarılı");
         router.push("/projects");
       }
-      console.log("Giriş başarılı!", res.data);
     } catch (err) {
-      // Hata durumunda, doğru hata mesajını yakalayalım
       if (err.response) {
-        // Backend'den dönen hata mesajını kullan
-        setError(err.response.data.message || "Bir hata oluştu!");
+        const message = err.response.data.message || "Bir hata oluştu!";
+        setError(message);
+        toast.error(message, { autoClose: 3000 });
       } else {
-        // Backend'e ulaşılamıyorsa veya başka bir hata oluştuysa
-        setError("Sunucuya bağlanılamadı.");
+        const message = "Sunucuya bağlanılamadı.";
+        setError(message);
+        toast.error(message, { autoClose: 3000 });
       }
-      console.error("Giriş hatası:", err.response || err.message);
     }
   };
 

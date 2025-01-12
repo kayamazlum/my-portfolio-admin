@@ -1,12 +1,42 @@
 "use client";
 import Menu from "@/components/menu";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 const About = () => {
   const [getAboutData, setGetAboutData] = useState(null);
   const [isLoading, setIsLoading] = useState(false); // Loading durumu
+
+  const router = useRouter();
+  const [userData, setUserData] = useState([]);
+  const validateToken = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return router.push("/");
+      }
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/validate-token`,
+        { headers: { Authorization: `${token}` } }
+      );
+
+      setUserData(res.data.user || []);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Token doğrulama başarısız!"
+      );
+      router.push("/");
+      return;
+    }
+  };
+  useEffect(() => {
+    const fetcUser = async () => {
+      await validateToken();
+    };
+    fetcUser();
+  }, []);
 
   const getAbout = async () => {
     try {
@@ -56,13 +86,9 @@ const About = () => {
     }
   };
 
-  if (!getAboutData) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="flex lg:flex-row flex-col">
-      <Menu />
+      <Menu userData={userData} />
       <div className="p-4 w-full h-[calc(100vh-100px)]">
         <h2 className="text-2xl font-medium mb-5 mt-2">About</h2>
         <div className="flex w-full mb-2 gap-2 items-center">

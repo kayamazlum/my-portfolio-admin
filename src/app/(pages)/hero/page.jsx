@@ -1,11 +1,41 @@
 "use client";
 import Menu from "@/components/menu";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 const About = () => {
   const [getHeroData, setGetHeroData] = useState(null);
+
+  const router = useRouter();
+  const [userData, setUserData] = useState([]);
+  const validateToken = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return router.push("/");
+      }
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/validate-token`,
+        { headers: { Authorization: `${token}` } }
+      );
+
+      setUserData(res.data.user || []);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Token doğrulama başarısız!"
+      );
+      router.push("/");
+      return;
+    }
+  };
+  useEffect(() => {
+    const fetcUser = async () => {
+      await validateToken();
+    };
+    fetcUser();
+  }, []);
 
   const getHero = async () => {
     try {
@@ -14,14 +44,15 @@ const About = () => {
       );
       setGetHeroData(response.data.heroData[0]);
     } catch (error) {
-      console.log(error);
+      toast.error(
+        error.response?.data?.message || "Token doğrulama başarısız!"
+      );
     }
   };
 
   useEffect(() => {
     getHero();
   }, []);
-  // console.log(getAboutData);
 
   const updateHero = async (e) => {
     e.preventDefault();
@@ -33,8 +64,8 @@ const About = () => {
 
       await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/update-hero`,
-
-        { getHeroData, headers: { Authorization: token } }
+        getHeroData,
+        { headers: { Authorization: token } }
       );
       toast.success("Hero updated successfully!", { autoClose: 3000 });
     } catch (error) {
@@ -44,7 +75,7 @@ const About = () => {
 
   return (
     <div className="flex lg:flex-row flex-col">
-      <Menu />
+      <Menu userData={userData || { username: "Guest" }} />
       <div className="p-4 w-full h-[calc(100vh-100px)]">
         <h2 className="text-2xl font-medium mb-5 mt-2">Hero</h2>
         <div className="flex w-full mb-2 gap-2 items-center ">

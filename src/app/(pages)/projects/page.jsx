@@ -31,11 +31,9 @@ const Projects = () => {
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/validate-token`,
         { headers: { Authorization: `${token}` } }
       );
-      console.log("Token geçerli:", res.data);
+
       setUserData(res.data.user || []);
-      console.log(userData);
     } catch (error) {
-      console.log("Token doğrulama hatası:", error.response?.data?.message);
       toast.error(
         error.response?.data?.message || "Token doğrulama başarısız!"
       );
@@ -49,7 +47,6 @@ const Projects = () => {
     };
     fetcUser();
   }, []);
-  console.log(userData);
 
   const [funcHandler, setFuncHandler] = useState("");
   const [deleteModal, setDeleteModal] = useState(false);
@@ -84,9 +81,7 @@ const Projects = () => {
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/details-project?_id=${id}`
       );
       setDetailsProjectData(d.data.selectedProject);
-      console.log(detailsProjectData);
     } catch (error) {
-      console.log(error);
       alert("DB bağlantısında hata!");
     }
   };
@@ -99,7 +94,6 @@ const Projects = () => {
       if (!token) {
         return toast.error("Yetki yok!");
       }
-      // console.log(token);
 
       await axios.delete(
         `${process.env.NEXT_PUBLIC_BACKEND_URI}/api/delete-project`,
@@ -111,7 +105,6 @@ const Projects = () => {
       toast.success("Project deleted successfully", { autoClose: 3000 });
       getAllProjects();
     } catch (error) {
-      console.log(error.response.data.message);
       toast.error(error.response.data.message);
     }
   };
